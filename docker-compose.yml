@@ -94,6 +94,7 @@ services:
   # guacd
   guacd:
     container_name: guacd_compose
+    hostname: guacd.testing.org
     image: guacamole/guacd
     networks:
       guacnetwork_compose:
@@ -104,12 +105,13 @@ services:
   # postgres
   postgres:
     container_name: postgres_guacamole_compose
+    hostname: postgres.testing.org
     environment:
       PGDATA: /var/lib/postgresql/data/guacamole
       POSTGRES_DB: guacamole_db
-      POSTGRES_PASSWORD: 'ChooseYourOwnPasswordHere1234'
+      POSTGRES_PASSWORD: 'Parted-Trimness-Spoiler1'
       POSTGRES_USER: guacamole_user
-    image: postgres:13.4-buster
+    image: postgres:14
     networks:
       guacnetwork_compose:
     restart: always
@@ -120,6 +122,7 @@ services:
   # guacamole
   guacamole:
     container_name: guacamole_compose
+    hostname: guacamole.testing.org
     depends_on:
     - guacd
     - postgres
@@ -127,9 +130,12 @@ services:
       GUACD_HOSTNAME: guacd
       POSTGRES_DATABASE: guacamole_db
       POSTGRES_HOSTNAME: postgres
-      POSTGRES_PASSWORD: 'ChooseYourOwnPasswordHere1234'
+      POSTGRES_PASSWORD: 'Parted-Trimness-Spoiler1'
       POSTGRES_USER: guacamole_user
     image: guacamole/guacamole
+    volumes:
+      - ./files:/home/guacamole/files:r
+    command: bash -c "cp /home/guacamole/files/postgresql-42.5.0.jar /opt/guacamole/postgresql/ && rm ~/.guacamole/lib/postgresql-9.4-1201.jdbc41.jar && ln -s /opt/guacamole/postgresql/postgresql-42.5.0.jar ~/.guacamole/lib/postgresql-42.5.0.jar"
     links:
     - guacd
     networks:
@@ -145,6 +151,7 @@ services:
   # nginx
   nginx:
    container_name: nginx_guacamole_compose
+   hostname: nginx.testing.org
    restart: always
    image: nginx
    volumes:

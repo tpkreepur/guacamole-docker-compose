@@ -2,5 +2,9 @@
 data/
 nginx/ssl/
 init/initdb.sql
+init/initdb.sh
 drive/
 record/
+LICENSE
+README.md
+CODE_OF_CONDUCT.md
